@@ -8,43 +8,36 @@ import {
   Service,
   CharacteristicEventTypes,
 } from "homebridge";
+import { SwitchConfig } from "./io-accessory-config";
 var MCP23017 = require('node-mcp23017');
 
-export type Device = {
-  name: string;
-  activeLow: boolean;
-  input: number;
-  output: number;
-}
-
-export class IOSwitch implements AccessoryPlugin {
+export class SwitchAccessory implements AccessoryPlugin {
 
   private readonly log: Logging;
-  private readonly mcp: typeof MCP23017;
+  private readonly mcp: ReturnType<typeof MCP23017>;
   private readonly onState: number;
   private readonly offState: number;
   private readonly outputPin: number;
 
   private switchOn = false;
-  private lastInputValue = true; // physical button switched off
+  private lastInputValue = true; // physical button is not pressed
 
   name: string;
 
   private readonly switchService: Service;
   private readonly informationService: Service;
 
-  constructor(hap: HAP, log: Logging, mcp: typeof MCP23017, device: Device) {
+  constructor(hap: HAP, log: Logging, mcp: ReturnType<typeof MCP23017>, config: SwitchConfig) {
     this.log = log;
     this.mcp = mcp;
-    this.name = device.name;
-    this.outputPin = device.output;
-    this.onState = device.activeLow ? 0 : 1;
-    this.offState = device.activeLow ? 1 : 0;
-    this.lastInputValue = true;
+    this.name = config.name;
+    this.outputPin = config.output;
+    this.onState = config.activeLow ? 0 : 1;
+    this.offState = config.activeLow ? 1 : 0;
 
-    this.mcp.pinMode(device.input, this.mcp.INPUT_PULLUP);
-    this.mcp.pinMode(device.output, this.mcp.OUTPUT);
-    this.mcp.digitalWrite(device.output, this.offState);
+    this.mcp.pinMode(config.input, this.mcp.INPUT_PULLUP);
+    this.mcp.pinMode(config.output, this.mcp.OUTPUT);
+    this.mcp.digitalWrite(config.output, this.offState);
 
     this.switchService = new hap.Service.Switch(this.name);
     this.switchService.getCharacteristic(hap.Characteristic.On)
@@ -62,7 +55,7 @@ export class IOSwitch implements AccessoryPlugin {
       .setCharacteristic(hap.Characteristic.Model, "IO Switch")
       .setCharacteristic(hap.Characteristic.SerialNumber, "001");
 
-    log.info("Switch '%s' created! Listening for input signals.", this.name);
+    log.info("Accessory '%s' created! Listening for input signals.", this.name);
 
     const setIntervalConst: ReturnType<typeof setInterval> = setInterval(() => {
       var readInput = () => {
@@ -83,7 +76,7 @@ export class IOSwitch implements AccessoryPlugin {
           this.lastInputValue = value;
         }
       }
-      this.mcp.digitalRead(device.input, readInput());
+      this.mcp.digitalRead(config.input, readInput());
     }, 50);
   }
 

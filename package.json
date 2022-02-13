@@ -1,8 +1,8 @@
 {
   "name": "homebridge-io-switch",
-  "version": "1.0.2",
-  "description": "Homebridge plugin to control lights or other on-off devices via physical wall switch and iOS Home app",
-  "main": "dist/homebridge-io-switch.js",
+  "version": "1.0.3",
+  "description": "Homebridge plugin to control home appliances via physical buttons on the wall and iOS Home app.",
+  "main": "dist/io-platform.js",
   "scripts": {
     "clean": "rimraf ./dist",
     "build": "rimraf ./dist && tsc",
@@ -25,6 +25,10 @@
     "light",
     "lightbulb",
     "switch",
+    "blinds",
+    "window-covering",
+    "window",
+    "fan",
     "homekit"
   ],
   "repository": {

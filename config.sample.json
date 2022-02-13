@@ -1,0 +1,134 @@
+{
+    "bridge": {
+        "name": "Homebridge 48EC",
+        "username": "0E:63:96:2E:F3:15",
+        "port": 51940,
+        "pin": "930-04-851"
+    },
+    "accessories": [],
+    "platforms": [
+        {
+            "name": "Config",
+            "port": 8581,
+            "platform": "config"
+        },
+        {
+            "platform": "InputOutputPlatform",
+            "name": "i2c 0x27",
+            "address": "0x27",
+            "devices": [
+                {
+                    "type": "window-covering",
+                    "name": "blinds 1",
+                    "activeLow": true,
+                    "inputUp": 15,
+                    "outputUp": 0,
+                    "inputDown": 14,
+                    "outputDown": 1,
+                    "durationUp": 1,
+                    "durationDown": 2,
+                    "durationOffset": 3
+                },
+                {
+                    "type": "window-covering",
+                    "name": "blinds 2",
+                    "activeLow": true,
+                    "inputUp": 13,
+                    "outputUp": 2,
+                    "inputDown": 12,
+                    "outputDown": 3,
+                    "durationUp": 1,
+                    "durationDown": 2,
+                    "durationOffset": 3
+                },
+                {
+                    "type": "window-covering",
+                    "name": "blinds 3",
+                    "activeLow": true,
+                    "inputUp": 11,
+                    "outputUp": 4,
+                    "inputDown": 10,
+                    "outputDown": 5,
+                    "durationUp": 1,
+                    "durationDown": 2,
+                    "durationOffset": 3
+                },
+                {
+                    "type": "window-covering",
+                    "name": "blinds 4",
+                    "activeLow": true,
+                    "inputUp": 9,
+                    "outputUp": 6,
+                    "inputDown": 8,
+                    "outputDown": 7,
+                    "durationUp": 1,
+                    "durationDown": 2,
+                    "durationOffset": 3
+                }
+            ]
+        },
+        {
+            "platform": "InputOutputPlatform",
+            "name": "i2c 0x26",
+            "address": "0x26",
+            "devices": [
+                {
+                    "type": "switch",
+                    "name": "switch 1b",
+                    "activeLow": true,
+                    "input": 15,
+                    "output": 0
+                },
+                {
+                    "type": "switch",
+                    "name": "switch 2b",
+                    "activeLow": true,
+                    "input": 14,
+                    "output": 1
+                },
+                {
+                    "type": "switch",
+                    "name": "switch 3b",
+                    "activeLow": true,
+                    "input": 13,
+                    "output": 2
+                },
+                {
+                    "type": "switch",
+                    "name": "switch 4b",
+                    "activeLow": true,
+                    "input": 12,
+                    "output": 3
+                },
+                {
+                    "type": "switch",
+                    "name": "switch 5b",
+                    "activeLow": true,
+                    "input": 11,
+                    "output": 4
+                },
+                {
+                    "type": "switch",
+                    "name": "switch 6b",
+                    "activeLow": true,
+                    "input": 10,
+                    "output": 5
+                },
+                {
+                    "type": "switch",
+                    "name": "switch 7b",
+                    "activeLow": true,
+                    "input": 9,
+                    "output": 6
+                },
+                {
+                    "type": "switch",
+                    "name": "switch 8b",
+                    "activeLow": true,
+                    "input": 8,
+                    "output": 7
+                }
+            ]
+        }
+    ]
+}
