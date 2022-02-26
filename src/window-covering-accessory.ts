@@ -28,6 +28,7 @@ export class WindowCoveringAccessory implements AccessoryPlugin {
   private readonly durationOffset: number;
   private readonly intervalUp: number;
   private readonly intervalDown: number;
+  private readonly inputInterval: number;
   private currentPositionInterval: ReturnType<typeof setInterval>;
   private finalBlindsStateTimeout: ReturnType<typeof setTimeout>;
   private togglePinTimeout: ReturnType<typeof setTimeout>;
@@ -58,6 +59,7 @@ export class WindowCoveringAccessory implements AccessoryPlugin {
     this.offState = config.activeLow ? 1 : 0;
     this.intervalUp = this.durationUp / 100;
     this.intervalDown = this.durationDown / 100;
+    this.inputInterval = config.inputInterval;
 
     this.mcp.pinMode(config.inputUp, this.mcp.INPUT_PULLUP);
     this.mcp.pinMode(config.inputDown, this.mcp.INPUT_PULLUP);
@@ -85,6 +87,9 @@ export class WindowCoveringAccessory implements AccessoryPlugin {
     const setIntervalConst: ReturnType<typeof setInterval> = setInterval(() => {
       var readInput = (lastInputValue: boolean) => {
         return (pin: number, err: string, value: boolean) => {
+          if (err) {
+            throw new Error("Error while reading input signals");
+          }
           if (lastInputValue == value) {
             return;
           }
@@ -107,14 +112,16 @@ export class WindowCoveringAccessory implements AccessoryPlugin {
             log.info("%s button down was pressed!", this.name);
             this.windowCoveringService.updateCharacteristic(hap.Characteristic.TargetPosition, 0);
             this.setTargetPositionNoCallback(0, false, true);
-          } else if (err) {
-            log.error(err);
           }
         }
       }
-      this.mcp.digitalRead(config.inputUp, readInput(this.inputUpLastValue));
-      this.mcp.digitalRead(config.inputDown, readInput(this.inputDownLastValue));
-    }, 50);
+      try {
+        this.mcp.digitalRead(config.inputUp, readInput(this.inputUpLastValue));
+        this.mcp.digitalRead(config.inputDown, readInput(this.inputDownLastValue));
+      } catch (error: any) {
+        log.error(error);
+      }
+    }, this.inputInterval);
   }
 
   getPositionState(callback: CharacteristicGetCallback): void {

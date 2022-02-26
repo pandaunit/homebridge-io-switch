@@ -1,12 +1,27 @@
 export type IOAccessoryConfig = {
     name: string;
     activeLow: boolean;
+    inputInterval: number;
 }
 
 export type SwitchConfig = IOAccessoryConfig & {
     type: "switch";
     input: number;
     output: number;
+};
+
+export type StatelessSwitchConfig = IOAccessoryConfig & {
+    type: "switch";
+    input: number;
+    output: number;
+    duration: number;
+};
+
+export type LockConfig = IOAccessoryConfig & {
+    type: "lock";
+    input: number;
+    output: number;
+    unlockingDuration: number;
 };
 
 export type WindowCoveringConfig = IOAccessoryConfig & {

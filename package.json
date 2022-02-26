@@ -1,6 +1,6 @@
 {
   "name": "homebridge-io-switch",
-  "version": "1.0.3",
+  "version": "1.0.4",
   "description": "Homebridge plugin to control home appliances via physical buttons on the wall and iOS Home app.",
   "main": "dist/io-platform.js",
   "scripts": {

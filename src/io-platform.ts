@@ -1,5 +1,7 @@
 import { AccessoryPlugin, API, HAP, Logging, PlatformConfig, StaticPlatformPlugin } from "homebridge";
 import { SwitchAccessory } from "./switch-accessory";
+import { StatelessSwitchAccessory } from "./stateless-switch-accessory";
+import { LockAccessory } from "./lock-accessory";
 import { WindowCoveringAccessory } from "./window-covering-accessory";
 var MCP23017 = require('node-mcp23017');
 
@@ -17,7 +19,7 @@ class InputOutputPlatform implements StaticPlatformPlugin {
 
   private readonly log: Logging;
   private readonly mcp: typeof MCP23017;
-  private readonly accs: Array<SwitchAccessory|WindowCoveringAccessory>;
+  private readonly accs: Array<SwitchAccessory | StatelessSwitchAccessory | LockAccessory | WindowCoveringAccessory>;
 
   constructor(log: Logging, config: PlatformConfig, api: API) {
     this.log = log;
@@ -33,6 +35,12 @@ class InputOutputPlatform implements StaticPlatformPlugin {
       switch (device.type) {
         case "switch":
           this.accs.push(new SwitchAccessory(hap, this.log, this.mcp, device));
+          break;
+        case "stateless-switch":
+          this.accs.push(new StatelessSwitchAccessory(hap, this.log, this.mcp, device));
+          break;
+        case "lock":
+          this.accs.push(new LockAccessory(hap, this.log, this.mcp, device));
           break;
         case "window-covering":
           this.accs.push(new WindowCoveringAccessory(hap, this.log, this.mcp, device));
