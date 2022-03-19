@@ -11,7 +11,7 @@ export type SwitchConfig = IOAccessoryConfig & {
 };
 
 export type StatelessSwitchConfig = IOAccessoryConfig & {
-    type: "switch";
+    type: "stateless-switch";
     input: number;
     output: number;
     duration: number;

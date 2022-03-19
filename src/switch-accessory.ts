@@ -35,7 +35,7 @@ export class SwitchAccessory implements AccessoryPlugin {
     this.outputPin = config.output;
     this.onState = config.activeLow ? 0 : 1;
     this.offState = config.activeLow ? 1 : 0;
-    this.inputInterval = config.inputInterval;
+    this.inputInterval = config.inputInterval || 50;
 
     this.mcp.pinMode(config.input, this.mcp.INPUT_PULLUP);
     this.mcp.pinMode(config.output, this.mcp.OUTPUT);
@@ -59,7 +59,7 @@ export class SwitchAccessory implements AccessoryPlugin {
 
     log.info("Accessory '%s' created! Listening for input signals.", this.name);
 
-    const setIntervalConst: ReturnType<typeof setInterval> = setInterval(() => {
+    setInterval(() => {
       var readInput = () => {
         return (pin: number, err: string, value: boolean) => {
           if (err) {

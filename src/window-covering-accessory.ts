@@ -59,7 +59,7 @@ export class WindowCoveringAccessory implements AccessoryPlugin {
     this.offState = config.activeLow ? 1 : 0;
     this.intervalUp = this.durationUp / 100;
     this.intervalDown = this.durationDown / 100;
-    this.inputInterval = config.inputInterval;
+    this.inputInterval = config.inputInterval || 50;
 
     this.mcp.pinMode(config.inputUp, this.mcp.INPUT_PULLUP);
     this.mcp.pinMode(config.inputDown, this.mcp.INPUT_PULLUP);
@@ -84,7 +84,7 @@ export class WindowCoveringAccessory implements AccessoryPlugin {
 
     log.info("Accessory '%s' created! Listening for input signals.", this.name);
 
-    const setIntervalConst: ReturnType<typeof setInterval> = setInterval(() => {
+    setInterval(() => {
       var readInput = (lastInputValue: boolean) => {
         return (pin: number, err: string, value: boolean) => {
           if (err) {
@@ -218,9 +218,11 @@ export class WindowCoveringAccessory implements AccessoryPlugin {
 
   togglePin(moveUp: boolean, duration: number) {
     let pin = (moveUp ? this.outputPinUp : this.outputPinDown);
+    let oppositePin = (moveUp ? this.outputPinDown : this.outputPinUp);
     if (this.durationOffset && (this.targetPosition == 0 || this.targetPosition == 100)) duration += this.durationOffset;
     this.log.info("%s was set to move %s to position %s. Duration %s ms.", this.name, (moveUp ? 'up' : 'down'), this.targetPosition, duration);
     this.finalBlindsStateTimeout = setTimeout(this.setFinalBlindsState.bind(this), duration);
+    this.mcp.digitalWrite(oppositePin, this.offState);
     this.mcp.digitalWrite(pin, this.onState);
     this.windowCoveringService.updateCharacteristic(this.api.Characteristic.PositionState, (moveUp ? STATE_INCREASING : STATE_DECREASING));
     this.windowCoveringService.updateCharacteristic(this.api.Characteristic.TargetPosition, this.targetPosition);
